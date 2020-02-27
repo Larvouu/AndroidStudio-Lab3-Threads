@@ -18,4 +18,10 @@
     <string name="times">*</string>
     <string name="divided">/</string>
     <string name="equal">=</string>
+
+    <!-- Lab 4 -->
+    <string name="historique">Historique</string>
+    <string name="error">raté !</string>
+    <string name="url_btn">Go !</string>
+    <string name="url_editText_hint">Essayer : https://www.amazon.fr</string>
 </resources>

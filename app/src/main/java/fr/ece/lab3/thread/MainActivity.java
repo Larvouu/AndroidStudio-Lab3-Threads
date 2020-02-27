@@ -3,10 +3,14 @@ package fr.ece.lab3.thread;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -15,6 +19,31 @@ import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
 
+    public static final String EXTRA_MESSAGE = "fr.ece.lab3.thread.extra.MESSAGE";
+    private static final int MY_ACTIVITY_CODE = 1;
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menulab4, menu); //Le deuxième paramètre "menu" est le menu passé en paramètre de la fonction OnCreateOptionsMenu
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch(item.getItemId()){
+            case R.id.item1 :
+                Toast.makeText(this, "Historique sélectionné", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(this, WebViewDisplay.class);
+                intent.putExtra(EXTRA_MESSAGE, "Dernière opération : " + param1_tmp + " " + operation_tmp + " " + param2_tmp + " = " + resultat_operation);
+                startActivity(intent);
+                return true;
+            default : return super.onOptionsItemSelected(item);
+        }
+    }
+
+    /**Intent intent = new Intent(this, MyCalculusRunnable.class);**/
 
     TextView textCalcul;
     TextView result;
@@ -27,8 +56,13 @@ public class MainActivity extends AppCompatActivity {
     // param 1 pour le nombre 1, param 2 pour le nombre 2 de l'opération
     int param1 = 0;
     int param2 = 0;
+    //param pour l'historique
+    int param1_tmp = 0;
+    int param2_tmp = 0;
     //Opérande
     String operation = "undefined";
+    //opération pour l'historique
+    String operation_tmp = "+"; //valeur par défaut arbitraire
 
 
     @Override
@@ -65,6 +99,8 @@ public class MainActivity extends AppCompatActivity {
 
         /**Décommenter cette ligne pour la version AsyncTask*/
         equal_btn.setOnClickListener(startResultDisplay_async());
+
+
     }
 
     public void clickHandler(View b) {
@@ -110,6 +146,7 @@ public class MainActivity extends AppCompatActivity {
 
         //Si on appuie sur le bouton "="
         else if (b.getTag().toString().equals("=")) {
+
             //On reset le textView
             textCalcul.setText("");
             //On effectue l'opération simple en fonction du signe opératoire
@@ -226,9 +263,15 @@ public class MainActivity extends AppCompatActivity {
             textCalcul.setText("");
             result.setText(resultat);
             Toast.makeText(MainActivity.this, param1 + " " + operation + " " + param2, Toast.LENGTH_LONG).show();
+            //On save les valeurs des paramètres de l'opération qui vient d'avoir lieue dans les paramètres temporaires...
+            param1_tmp = param1;
+            param2_tmp = param2;
+            operation_tmp = operation;
+            //Avant de reset les param pour la prochaine opération
             param1 = 0;
             param2 = 0;
             operation = "undefined";
+            resultat_operation = resultat;
         }
     }
 }
